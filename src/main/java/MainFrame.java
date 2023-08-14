@@ -138,8 +138,24 @@ public class MainFrame extends Application {
         button1.getStyleClass().add("button-style");
         configureButtonAnimation(button1);
         
+        
         Button button2 = new Button("Convertir");
-        /* button2.setOnAction(e -> ); */
+        button2.setOnAction(e -> {
+            String op1 = option1.getValue();
+            String op2 = option2.getValue();
+
+            if (op1 != null && op2 !=null) {
+                int value1 = option1.getSelectionModel().getSelectedIndex();
+                int value2 = option2.getSelectionModel().getSelectedIndex();
+                System.out.println(op1+" es: "+value1+", "+op2+" es: "+value2);
+
+                double inputValue = Double.parseDouble(number1.getText());
+                double outputValue = converterEjecution(value1, value2, inputValue);
+                number2.setText(String.valueOf(outputValue));
+
+            }
+        });
+
         button2.getStyleClass().add("button-style");
         configureButtonAnimation(button2);
         
@@ -199,6 +215,10 @@ public void configureButtonAnimation(Button button) {
     });
 }
 
+public double converterEjecution(int value1, int value2, double number){
+    return Currency.convertProcces(number, value1, value2);
+
+}
 public static void main(String[] args) {
     launch(args);
 }

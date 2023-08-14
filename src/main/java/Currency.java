@@ -8,13 +8,4 @@ public class Currency {
     public static double convertProcces(double value, int firstIndex, int secondIndex) {
         return (value * values[firstIndex])/values[secondIndex];
     }
-
-    public static String getFirstCurrencyName(int firstIndex){
-        return currencies[firstIndex];
-    }
-
-    public static String getSecondCurrencyName(int secondIndex){
-        return currencies[secondIndex];
-    }
-
-    }
+};

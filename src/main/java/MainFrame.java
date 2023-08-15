@@ -18,9 +18,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import javafx.util.converter.IntegerStringConverter;
+import javafx.util.converter.DoubleStringConverter;
 
 public class MainFrame extends Application {
+
+    public int converterIndex = 0;
 
     @Override
     public void start(Stage primaryStage) {
@@ -35,16 +37,16 @@ public class MainFrame extends Application {
         // Crear los botones
         Button button1 = new Button("Divisas");
         //Función de los botones
-        button1.setOnAction(e -> cConverter(primaryStage));
+        button1.setOnAction(e -> {converterIndex = 1; converterFunction(primaryStage);});
         //Animación de hover de los botones
         configureButtonAnimation(button1);
 
         Button button2 = new Button("Temperatura");
-        button2.setOnAction(e -> dConverter());
+        button2.setOnAction(e -> {converterIndex = 2; converterFunction(primaryStage);});
         configureButtonAnimation(button2);
 
         Button button3 = new Button("Distancia");
-        button3.setOnAction(e -> tConverter());
+        button3.setOnAction(e -> {converterIndex = 3; converterFunction(primaryStage);});
         configureButtonAnimation(button3);
         
         //Adición de las clases de CSS de los botones para compartir estilos
@@ -86,15 +88,15 @@ public class MainFrame extends Application {
         primaryStage.show();
     }
     
-    private void cConverter(Stage primaryStage) {
+    private void converterFunction(Stage primaryStage) {
         
         TextField number1 = new TextField();
         number1.getStyleClass().add("number");
 
         // Crear un TextFormatter que solo permita números
-        TextFormatter<Integer> textFormatter = new TextFormatter<>(
-            new IntegerStringConverter(),
-            null,
+        TextFormatter<Double> textFormatter = new TextFormatter<>(
+            new DoubleStringConverter(),
+            0.0, // Valor predeterminado
             change -> {
                 String newText = change.getControlNewText();
                 if (newText.matches("[0-9]*|\\d+\\.\\d*")) { // Expresión regular para números
@@ -102,13 +104,19 @@ public class MainFrame extends Application {
                 }
                 return null;
             }
-        );
+    );
         
         number1.setTextFormatter(textFormatter);
 
         ComboBox<String> option1 = new ComboBox<>();
-        option1.setPromptText("Moneda");
-        option1.getItems().addAll(Currency.currencies);
+        option1.setPromptText("Selecciona");
+        if (converterIndex==1) {
+            option1.getItems().addAll(Currency.currencies);
+        }else if (converterIndex==2) {
+            option1.getItems().addAll(Temperature.units);
+        }else if (converterIndex==3) {
+            option1.getItems().addAll(Distance.units);
+        }
         option1.getStyleClass().add("option");
         
         HBox input = new HBox(5, number1,option1);
@@ -118,8 +126,14 @@ public class MainFrame extends Application {
         number2.setEditable(false);
         
         ComboBox<String> option2 = new ComboBox<>();
-        option2.setPromptText("Moneda");
-        option2.getItems().addAll(Currency.currencies);
+        option2.setPromptText("Selecciona");
+        if (converterIndex==1) {
+            option2.getItems().addAll(Currency.currencies);
+        }else if (converterIndex==2) {
+            option2.getItems().addAll(Temperature.units);
+        }else if (converterIndex==3) {
+            option2.getItems().addAll(Distance.units);
+        }
         option2.getStyleClass().add("option");
         
         HBox output = new HBox(0, number2,option2);
@@ -134,7 +148,7 @@ public class MainFrame extends Application {
 
         // Crear los botones
         Button button1 = new Button("Menú");
-        button1.setOnAction(e -> start(primaryStage));
+        button1.setOnAction(e -> {converterIndex = 0; start(primaryStage);});
         button1.getStyleClass().add("button-style");
         configureButtonAnimation(button1);
         
@@ -148,8 +162,9 @@ public class MainFrame extends Application {
                 int value1 = option1.getSelectionModel().getSelectedIndex();
                 int value2 = option2.getSelectionModel().getSelectedIndex();
                 System.out.println(op1+" es: "+value1+", "+op2+" es: "+value2);
-
+  
                 double inputValue = Double.parseDouble(number1.getText());
+                System.out.println(inputValue);
                 double outputValue = converterEjecution(value1, value2, inputValue);
                 number2.setText(String.valueOf(outputValue));
 
@@ -189,14 +204,6 @@ public class MainFrame extends Application {
         primaryStage.setScene(sceneCurrency);
     }
 
-private void dConverter() {
-    
-}
-
-private void tConverter() {
-    
-}
-
 public void configureButtonAnimation(Button button) {
     // Crear una transición de escala al hacer hover
     ScaleTransition scaleTransition = new ScaleTransition(Duration.millis(400), button);
@@ -216,7 +223,17 @@ public void configureButtonAnimation(Button button) {
 }
 
 public double converterEjecution(int value1, int value2, double number){
-    return Currency.convertProcces(number, value1, value2);
+    System.out.println(number); 
+    if (converterIndex==1) {
+        return Currency.convertProcess(number, value1, value2);        
+    }else if (converterIndex==2) {
+        return Temperature.convertProcess(number, value1, value2);        
+        
+    }else if (converterIndex==3) {
+        return Distance.convertProcess(number, value1, value2);        
+        
+    }
+    return 0;
 
 }
 public static void main(String[] args) {

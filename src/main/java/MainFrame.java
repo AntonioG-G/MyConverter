@@ -235,8 +235,5 @@ public double converterEjecution(int value1, int value2, double number){
     }
     return 0;
 
-}
-public static void main(String[] args) {
-    launch(args);
-}
+    }
 }
